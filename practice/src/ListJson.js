@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import Addform from './Addform';
 import 'bootstrap/dist/css/bootstrap.min.css';
 const API = "http://jsonplaceholder.typicode.com/users";
 class ListJson extends React.Component{
@@ -8,6 +9,7 @@ class ListJson extends React.Component{
         this.state = {
             name : []
         };
+        this.create = this.create.bind(this);
     }
     async componentDidMount(){
         let get_api = await axios.get(API);
@@ -17,7 +19,11 @@ class ListJson extends React.Component{
         console.log(this.state.name)
        
     }
-
+    create(newuser){
+      this.setState({
+          name: [...this.state.name, newuser]
+      });
+    }
     render(){
         const List = this.state.name.map(e => {
             return <tr key={e.id}>
@@ -29,6 +35,7 @@ class ListJson extends React.Component{
             <div className="ToDoList">
             <div className="container">
               <h1 className="text-center">User List</h1>
+              <Addform create={this.create}></Addform>
               <table className="table">
                 <thead>
                   <tr>
