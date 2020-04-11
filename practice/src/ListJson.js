@@ -1,7 +1,9 @@
 import React from 'react';
 import axios from 'axios';
 import Addform from './Addform';
+import Delete from './Delete';
 import 'bootstrap/dist/css/bootstrap.min.css';
+
 const API = "http://jsonplaceholder.typicode.com/users";
 class ListJson extends React.Component{
     constructor(props){
@@ -10,6 +12,7 @@ class ListJson extends React.Component{
             name : []
         };
         this.create = this.create.bind(this);
+        this.remove = this.remove.bind(this);
     }
     async componentDidMount(){
         let get_api = await axios.get(API);
@@ -19,16 +22,27 @@ class ListJson extends React.Component{
         console.log(this.state.name)
        
     }
+
+    remove(id){
+      this.setState({
+          name: this.state.name.filter(t => t.id !== id)
+      });
+    }
+
     create(newuser){
       this.setState({
           name: [...this.state.name, newuser]
       });
     }
+    
     render(){
         const List = this.state.name.map(e => {
-            return <tr key={e.id}>
-              <td>{e.name}</td>
-            </tr>
+            return <Delete
+                key={e.id}
+                id={e.id}
+                remove ={this.remove}>
+                  {e.name} 
+            </Delete>
         })
         
         return(
@@ -39,7 +53,7 @@ class ListJson extends React.Component{
               <table className="table">
                 <thead>
                   <tr>
-                  <th>Name</th>
+                    <th>Name</th>
                   </tr>
                 </thead>
                 <tbody>
