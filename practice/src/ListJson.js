@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import Addform from './Addform';
-import Delete from './Delete';
+import Todo from './Todo';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const API = "http://jsonplaceholder.typicode.com/users";
@@ -13,6 +13,7 @@ class ListJson extends React.Component{
         };
         this.create = this.create.bind(this);
         this.remove = this.remove.bind(this);
+        this.update = this.update.bind(this);
     }
     async componentDidMount(){
         let get_api = await axios.get(API);
@@ -22,6 +23,11 @@ class ListJson extends React.Component{
         console.log(this.state.name)
        
     }
+    create(newuser){
+      this.setState({
+          name: [...this.state.name, newuser]
+      });
+    }
 
     remove(id){
       this.setState({
@@ -29,20 +35,29 @@ class ListJson extends React.Component{
       });
     }
 
-    create(newuser){
+    update(id, updated){
+      const updatedname = this.state.name.map(name => {
+          if(name.id === id){
+              return {...name, name: updated}
+          } return name;
+      })
       this.setState({
-          name: [...this.state.name, newuser]
-      });
-    }
+          name: updatedname
+      })
+  }
+
+    
     
     render(){
         const List = this.state.name.map(e => {
-            return <Delete
+            return <Todo
                 key={e.id}
                 id={e.id}
-                remove ={this.remove}>
+                remove ={this.remove}
+                update={this.update}
+                name={e.name}>
                   {e.name} 
-            </Delete>
+            </Todo>
         })
         
         return(
@@ -54,6 +69,8 @@ class ListJson extends React.Component{
                 <thead>
                   <tr>
                     <th>Name</th>
+                    <th>Event</th>
+                    <th>Event</th>
                   </tr>
                 </thead>
                 <tbody>
